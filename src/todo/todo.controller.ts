@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Todo } from './entities/todo.entity';
 
@@ -34,7 +34,12 @@ export class TodoController {
         @Param( 'id') id
     ){
         const todo = this.todos.find((actualTodo) =>  actualTodo.id === +id);
-        return todo;
+        if(todo){
+            return todo;
+        }else{
+            throw new NotFoundException(`Le todo d'id ${id} n'existe pas`);
+        }
+        
     }
     
 
