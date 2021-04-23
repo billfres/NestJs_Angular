@@ -87,7 +87,7 @@ export class TodoController {
     @Put('/:id')
     modifierTodo(
         @Param('id') id,
-        @Body() newTodo: Partial<Todo>
+        @Body() newTodo: Partial<AddTodoDto>
     ){
         const todo = this.getTodoById(id);
         todo.description = newTodo.description? newTodo.description : todo.description;
