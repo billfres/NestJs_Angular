@@ -27,6 +27,14 @@ export class TodoController {
         return this.todos;
     }
 
+    @Get('/:id')
+    getTodoById(
+    ){
+        console.log('Get to by id');
+        return 'GET TODO BY ID';
+    }
+    
+
     @Post()
     addTodo(
         @Body() newTodo: Todo
