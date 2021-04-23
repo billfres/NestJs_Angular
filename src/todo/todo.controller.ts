@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { identity } from 'rxjs';
 import { Todo } from './entities/todo.entity';
 
 @Controller('todo')
@@ -77,10 +78,15 @@ export class TodoController {
         };
     }
 
-    @Put()
-    modofierTodo(){
-        console.log('Modifier la liste des todos');
-        return 'TODO modifier';
+    @Put('/:id')
+    modofierTodo(
+        @Param('id') id,
+        @Body() newTodo: Partial<Todo>
+    ){
+        const todo = this.getTodoById(id);
+        todo.description = newTodo.description? newTodo.description : todo.description;
+        todo.name = newTodo.name? newTodo.name : todo.name;
+        return todo;
     }
 
 }
