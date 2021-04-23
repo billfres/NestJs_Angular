@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Todo } from './entities/todo.entity';
 
@@ -10,7 +10,9 @@ export class TodoController {
     constructor(){
         this.todos = [];
     }
-   /* @Get()
+   /*
+   ``
+    @Get()
     getTodosv1(
         @Req() request: Request,
         @Req() response: Response
@@ -29,9 +31,10 @@ export class TodoController {
 
     @Get('/:id')
     getTodoById(
+        @Param( 'id') id
     ){
-        console.log('Get to by id');
-        return 'GET TODO BY ID';
+        const todo = this.todos.find((actualTodo) =>  actualTodo.id === +id);
+        return todo;
     }
     
 
