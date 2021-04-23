@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Todo } from './entities/todo.entity';
 
@@ -25,7 +25,9 @@ export class TodoController {
 
     @Get()
     getTodos(
+        @Query() mesQueryParams //passer et recuperer +sieurs paramètres à l'url
     ){
+        console.log(mesQueryParams);
         return this.todos;
     }
 
@@ -56,10 +58,23 @@ export class TodoController {
         return newTodo;
     }
 
-    @Delete()
-    deleteTodo(){
-        console.log('Supprimer un doto de la liste des todos');
-        return 'deleled TODO';
+    @Delete('/:id')
+    deleteTodo(
+        @Param('id') id
+    ){
+        //chercher l'objet via son id dans le tableai des todos
+        const index = this.todos.findIndex((todo) => todo.id === +id);
+        //Utiliser la methode splice pour supprimer le todo s'il existe
+        if(index >= 0){
+            this.todos.splice(index, 1);
+        }else{
+            throw new NotFoundException(`Le todo d'id #${id} n'existe pas`);
+        }
+        //sinon, on declanche une erreur
+        return {
+            message : `Le todo d'id #${id} a été supprimé avec succès`,
+            count : 1
+        };
     }
 
     @Put()
