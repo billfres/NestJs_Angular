@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { identity } from 'rxjs';
+import { AddTodoDto } from './dto/add-todo.dto';
+import { GetPaginatedTodoDto } from './dto/get-paginated-todo.dto';
 import { Todo } from './entities/todo.entity';
 
 @Controller('todo')
@@ -26,7 +28,7 @@ export class TodoController {
 
     @Get()
     getTodos(
-        @Query() mesQueryParams //passer et recuperer +sieurs paramètres à l'url
+        @Query() mesQueryParams: GetPaginatedTodoDto //passer et recuperer +sieurs paramètres à l'url
     ){
         console.log(mesQueryParams);
         return this.todos;
@@ -48,14 +50,18 @@ export class TodoController {
 
     @Post()
     addTodo(
-        @Body() newTodo: Todo
+        @Body() newTodo: AddTodoDto
     ){
+        const todo = new Todo();
+        const { name, description} = newTodo;
+        todo.name = name;
+        todo.description = description;
         if(this.todos.length){
-            newTodo.id = this.todos[this.todos.length -1].id +1;
+            todo.id = this.todos[this.todos.length -1].id +1;
         }else{
-            newTodo.id = 1;
+            todo.id = 1;
         }
-        this.todos.push(newTodo);
+        this.todos.push(todo);
         return newTodo;
     }
 
@@ -79,7 +85,7 @@ export class TodoController {
     }
 
     @Put('/:id')
-    modofierTodo(
+    modifierTodo(
         @Param('id') id,
         @Body() newTodo: Partial<Todo>
     ){
