@@ -1,16 +1,17 @@
 import { Controller, Delete, Get, Post, Put, Req, Res } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('todo')
 export class TodoController {
 
     @Get()
     getTodosv1(
-        @Req() request: Request
+        @Req() request: Request,
+        @Req() response: Response
     ){
         console.log('Liste des todos');
-        console.log('-------Request------');
-        console.log(request);
+        console.log('-------Responve------');
+        console.log(response);
         return 'Tous nos todos';
     }
 
