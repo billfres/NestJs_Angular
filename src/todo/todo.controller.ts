@@ -4,15 +4,14 @@ import { identity } from 'rxjs';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { GetPaginatedTodoDto } from './dto/get-paginated-todo.dto';
 import { Todo } from './entities/todo.entity';
+import { TodoService } from './todo.service';
 
 @Controller('todo')
 export class TodoController {
 
-    todos: Todo[];
-
-    constructor(){
-        this.todos = [];
-    }
+    constructor(
+        private todoService: TodoService
+    ){}
    /*
    ``
     @Get()
@@ -27,23 +26,18 @@ export class TodoController {
     }*/
 
     @Get()
-    getTodos(
+    getTodos (
         @Query() mesQueryParams: GetPaginatedTodoDto //passer et recuperer +sieurs paramètres à l'url
-    ){
+): Todo[] {
         console.log(mesQueryParams);
-        return this.todos;
+        return this.todoService.getTodos();
     }
 
     @Get('/:id')
     getTodoById(
         @Param( 'id') id
     ){
-        const todo = this.todos.find((actualTodo) =>  actualTodo.id === +id);
-        if(todo){
-            return todo;
-        }else{
-            throw new NotFoundException(`Le todo d'id ${id} n'existe pas`);
-        }
+        return this.todoService.getTodoById(+id);
         
     }
     
@@ -51,37 +45,15 @@ export class TodoController {
     @Post()
     addTodo(
         @Body() newTodo: AddTodoDto
-    ){
-        const todo = new Todo();
-        const { name, description} = newTodo;
-        todo.name = name;
-        todo.description = description;
-        if(this.todos.length){
-            todo.id = this.todos[this.todos.length -1].id +1;
-        }else{
-            todo.id = 1;
-        }
-        this.todos.push(todo);
-        return newTodo;
+    ): Todo {
+        return this.todoService.addTodo(newTodo);
     }
 
     @Delete('/:id')
     deleteTodo(
         @Param('id') id
     ){
-        //chercher l'objet via son id dans le tableai des todos
-        const index = this.todos.findIndex((todo) => todo.id === +id);
-        //Utiliser la methode splice pour supprimer le todo s'il existe
-        if(index >= 0){
-            this.todos.splice(index, 1);
-        }else{
-            throw new NotFoundException(`Le todo d'id #${id} n'existe pas`);
-        }
-        //sinon, on declanche une erreur
-        return {
-            message : `Le todo d'id #${id} a été supprimé avec succès`,
-            count : 1
-        };
+       return this.todoService.deleteTodo(+id);
     }
 
     @Put('/:id')
@@ -89,10 +61,7 @@ export class TodoController {
         @Param('id') id,
         @Body() newTodo: Partial<AddTodoDto>
     ){
-        const todo = this.getTodoById(id);
-        todo.description = newTodo.description? newTodo.description : todo.description;
-        todo.name = newTodo.name? newTodo.name : todo.name;
-        return todo;
+       return this.todoService.updateTodo(+id, newTodo);
     }
 
 }
