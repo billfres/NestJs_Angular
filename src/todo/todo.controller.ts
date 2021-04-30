@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, ParseIntPipe, Post, Put, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, ParseIntPipe, Post, Put, Query, Req, Res, ValidationPipe } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { identity } from 'rxjs';
 import { AddTodoDto } from './dto/add-todo.dto';
@@ -28,7 +28,7 @@ export class TodoController {
     @Get()
     getTodos (
         @Query() mesQueryParams: GetPaginatedTodoDto //passer et recuperer +sieurs paramètres à l'url
-): Todo[] {
+    ): Todo[] {
         console.log(mesQueryParams);
         return this.todoService.getTodos();
     }
