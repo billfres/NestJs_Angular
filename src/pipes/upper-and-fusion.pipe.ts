@@ -7,6 +7,6 @@ export class UpperAndFusionPipe implements PipeTransform {
     if(metadata.type === 'body'){
       return entry.data.map((element) => element.toLocaleUpperCase()).join('--');
     }
-    return entry.data;
+    return entry;
   }
 }

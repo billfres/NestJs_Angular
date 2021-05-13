@@ -70,7 +70,9 @@ export class TodoController {
 
     @Post('pipe')
     testPipe(
-        @Body(UpperAndFusionPipe) data
+        @Param( 'data', UpperAndFusionPipe) paramData,
+        //@Body(UpperAndFusionPipe) data
+        @Body() data
     ){
         return data;
     }
