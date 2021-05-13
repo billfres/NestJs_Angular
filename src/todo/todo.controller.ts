@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, ParseIntPipe, Post, Put, Query, Req, Res, ValidationPipe } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { identity } from 'rxjs';
+import { UpperAndFusionPipe } from 'src/pipes/upper-and-fusion.pipe';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { GetPaginatedTodoDto } from './dto/get-paginated-todo.dto';
 import { Todo } from './entities/todo.entity';
@@ -65,6 +66,13 @@ export class TodoController {
         @Body() newTodo: Partial<AddTodoDto>
     ){
        return this.todoService.updateTodo(+id, newTodo);
+    }
+
+    @Post('pipe')
+    testPipe(
+        @Body(UpperAndFusionPipe) data
+    ){
+        return data;
     }
 
 }
