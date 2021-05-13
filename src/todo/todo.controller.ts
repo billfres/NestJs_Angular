@@ -29,7 +29,7 @@ export class TodoController {
     getTodos (
         @Query() mesQueryParams: GetPaginatedTodoDto //passer et recuperer +sieurs paramètres à l'url
     ): Todo[] {
-        console.log(mesQueryParams);
+        console.log(mesQueryParams instanceof GetPaginatedTodoDto);
         return this.todoService.getTodos();
     }
 
@@ -48,6 +48,7 @@ export class TodoController {
     addTodo(
         @Body() newTodo: AddTodoDto
     ): Todo {
+        console.log(newTodo);
         return this.todoService.addTodo(newTodo);
     }
 
