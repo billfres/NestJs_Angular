@@ -30,7 +30,7 @@ export class TodoController {
     getTodos (
         @Query() mesQueryParams: GetPaginatedTodoDto //passer et recuperer +sieurs paramètres à l'url
     ): Todo[] {
-        console.log(mesQueryParams instanceof GetPaginatedTodoDto);
+        //console.log(mesQueryParams instanceof GetPaginatedTodoDto);
         return this.todoService.getTodos();
     }
 
