@@ -19,7 +19,7 @@ export class AppModule implements NestModule {
       {path: 'todo/(*)', method: RequestMethod.DELETE}
     )
       .apply(logger).forRoutes('')
-      //.apply(HelmetMiddleware)
+      .apply(HelmetMiddleware).forRoutes('')
       ;
   }
   

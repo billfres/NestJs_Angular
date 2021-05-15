@@ -7,7 +7,11 @@ import { logger } from './middlewares/logger.middleware';
 import * as morgan from 'morgan';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
+  const corsOptions ={
+    origin : ['http://localhst:4200']
+  }
+  app.enableCors( corsOptions);
   app.use(morgan('dev'));
   app.use(logger
     /*() => {
