@@ -8,11 +8,13 @@ import * as dotenv from 'dotenv';
 
 import * as morgan from 'morgan';
 import { DurationInterceptor } from './interceptors/duration.interceptor';
+import { ConfigService } from '@nestjs/config';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  const configService = app.get(ConfigService);
   const corsOptions ={
     origin : ['http://localhst:4200']
   }
@@ -32,6 +34,7 @@ async function bootstrap() {
     whitelist : true, //blocage des elts non souhaités
     forbidNonWhitelisted : true //lever une exception à cause des data invalid
   }));
-  await app.listen(process.env.APP_PORT);
+  //await app.listen(process.env.APP_PORT);
+  await app.listen(configService.get('APP_PORT'));
 }
 bootstrap();
