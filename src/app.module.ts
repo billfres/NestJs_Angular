@@ -9,7 +9,10 @@ import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
-    TodoModule
+    TodoModule,
+    ConfigModule.forRoot({
+      isGlobal: true
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
