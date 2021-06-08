@@ -1,7 +1,8 @@
+import { TimestampEntites } from "src/Generics/timestamp.entities";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('cv')
-export class CvEntity {
+export class CvEntity extends TimestampEntites{
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -29,10 +30,10 @@ export class CvEntity {
   @Column()
   path: string;
 /*
+gerer par le dossier Generics
   @CreatedDateColumn()
   createdAt: Date;
 
-  TimestampEntites
   @UpdatedDateColumn()
   updatedAt : Date;
 
