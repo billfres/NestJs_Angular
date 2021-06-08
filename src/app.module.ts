@@ -9,6 +9,7 @@ import { TodoModule } from './todo/todo.module';
 
 import * as dotenv from 'dotenv';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CvModule } from './cv/cv.module';
 
 dotenv.config();
 
@@ -27,7 +28,8 @@ dotenv.config();
       database: process.env.DB_NAME,
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
-    })
+    }),
+    CvModule
   ],
   controllers: [AppController],
   providers: [AppService],
