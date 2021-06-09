@@ -5,5 +5,13 @@ import { CvEntity } from './entities/cv.entity';
 
 @Injectable()
 export class CvService {
-   
+    constructor(
+        @InjectRepository(CvEntity)
+        private cvRespository: Repository<CvEntity>
+    ){
+    }
+
+    async getCvs(): Promise<CvEntity[]>{
+        return await this.cvRespository.find();
+    }
 }
