@@ -30,5 +30,15 @@ export class CvController {
     ): Promise<CvEntity>{
         return await this.cvService.updateCv(id,updateCvDto);
     }
+
+    @Patch()
+    //@UseGuards(JwtAuthGuard)
+    async updateCv2(
+        @Body() updateObject
+        //@User() user
+    ) {
+        const {updateCriteria, updateCvDto} = updateObject
+        return await this.cvService.updateCv2(updateCriteria, updateCvDto);
+    }
 }
 

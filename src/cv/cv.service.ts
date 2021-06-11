@@ -34,4 +34,9 @@ export class CvService {
         }
         return await this.cvRespository.save(newCv);
     }
+
+    updateCv2(updateCriteria, cv: UpdateCvDto ) {
+        return this.cvRespository.update(updateCriteria, cv);
+    }
+    
 }
