@@ -38,5 +38,14 @@ export class CvService {
     updateCv2(updateCriteria, cv: UpdateCvDto ) {
         return this.cvRespository.update(updateCriteria, cv);
     }
+
+    async removeCv(id: number) {
+        const cvToRemove = await this.cvRespository.findOne(id);
+        //const cvToRemove = await this.findCvById(id);
+        if(! cvToRemove) {
+            throw new NotFoundException(`Le cv d'id ${id} n'existe pas`);
+        }
+        return await this.cvRespository.remove(cvToRemove);
+    }
     
 }
