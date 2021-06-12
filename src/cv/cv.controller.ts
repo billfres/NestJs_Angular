@@ -48,6 +48,7 @@ export class CvController {
         //@User() user
     ) {
         return this.cvService.removeCv(id);
+        // soiten utilisant la methode return this.cvService.deleteCv(id); 
         //return this.cvService.softDeleteCv(id, user);
     }
 }

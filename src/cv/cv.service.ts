@@ -47,5 +47,13 @@ export class CvService {
         }
         return await this.cvRespository.remove(cvToRemove);
     }
+
+    async deleteCv(id: number) {
+        const cvToRemove = await this.cvRespository.findOne(id);
+        if(! cvToRemove) {
+            throw new NotFoundException(`Le cv d'id ${id} n'existe pas`);
+        }
+        return await this.cvRespository.delete(cvToRemove);
+    }
     
 }
