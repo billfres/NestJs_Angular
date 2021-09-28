@@ -47,9 +47,13 @@ export class CvController {
         @Param('id', ParseIntPipe) id: number,
         //@User() user
     ) {
-        return this.cvService.removeCv(id);
-        // soiten utilisant la methode return this.cvService.deleteCv(id); 
+        //return this.cvService.removeCv(id);
+        // soit en utilisant la methode return this.cvService.deleteCv(id); 
         //return this.cvService.softDeleteCv(id, user);
+        //La méthode delete utilise des critères
+
+        //soft RemoveCv
+        return this.cvService.softRemoveCv(id);
     }
 }
 

@@ -49,11 +49,19 @@ export class CvService {
     }
 
     async deleteCv(id: number) {
+       /* const cvToRemove = await this.cvRespository.findOne(id);
+        if(! cvToRemove) {
+            throw new NotFoundException(`Le cv d'id ${id} n'existe pas`);
+        }*/
+        return await this.cvRespository.delete(id);
+    }
+
+    async softRemoveCv(id: number){
         const cvToRemove = await this.cvRespository.findOne(id);
         if(! cvToRemove) {
             throw new NotFoundException(`Le cv d'id ${id} n'existe pas`);
         }
-        return await this.cvRespository.delete(cvToRemove);
+        return this.cvRespository.softRemove(cvToRemove);
     }
     
 }
