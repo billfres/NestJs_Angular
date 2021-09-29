@@ -60,11 +60,16 @@ export class CvService {
         return await this.cvRespository.delete(id);
     }
 
-    async softRemoveCv(id: number){
+    /*async softRemoveCv(id: number){
         const cvToRemove = await this.findCvById(id);
         return this.cvRespository.softRemove(cvToRemove);
+    }*/
+    async softDeleteCv(id: number){
+        return this.cvRespository.softDelete(id);
     }
 
-    
+    async restoreCv(id: number){
+        this.cvRespository.restore(id);
+    }
     
 }

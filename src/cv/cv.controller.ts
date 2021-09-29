@@ -41,7 +41,7 @@ export class CvController {
         return await this.cvService.updateCv2(updateCriteria, updateCvDto);
     }
 
-    @Delete(':id')
+    /*@Delete(':id')
     //@UseGuards(JwtAuthGuard)
     async removeCv(
         @Param('id', ParseIntPipe) id: number,
@@ -54,6 +54,18 @@ export class CvController {
 
         //soft RemoveCv
         return this.cvService.softRemoveCv(id);
+    }*/
+    @Delete(':id')
+    async deleteCv(
+        @Param('id', ParseIntPipe) id: number
+    ) {
+        return this.cvService.softDeleteCv(id);
+    }
+
+    @Get('recover/:id')
+    async restoreCv(
+        @Param('id', ParseIntPipe) id:  number){
+        return await this.cvService.restoreCv(id);
     }
 }
 
