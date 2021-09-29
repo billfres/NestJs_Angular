@@ -10,6 +10,7 @@ import { TodoModule } from './todo/todo.module';
 import * as dotenv from 'dotenv';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CvModule } from './cv/cv.module';
+import { UserModule } from './user/user.module';
 
 dotenv.config();
 
@@ -29,7 +30,8 @@ dotenv.config();
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
     }),
-    CvModule
+    CvModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

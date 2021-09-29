@@ -71,5 +71,17 @@ export class CvService {
     async restoreCv(id: number){
         this.cvRespository.restore(id);
     }
+
+    async statCvNumberByAge(maxAge, minAge = 0) {
+        // Créer un queryBuilder
+        const qb = this.cvRespository.createQueryBuilder("cv");
+        // Chercher le nombre de cv par age
+          qb.select("cv.age, count(cv.id) as nombreDeCv")
+          .where("cv.age > :minAge and cv.Age< :maxAge")
+          .setParameters({minAge, maxAge})
+          .groupBy("cv.age");
+          console.log(qb.getSql());
+          return await qb.getRawMany();
+      }
     
 }
