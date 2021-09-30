@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { LoginCredentialsDto } from './dto/login-credentials.dto';
 import { UserSubscribeDto } from './dto/user-subscribe.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserService } from './user.service';
@@ -15,4 +16,16 @@ export class UserController {
     ): Promise<Partial<UserEntity>>{
         return this.userService.register(userData);
     }
+
+    @Post('login')
+    login(
+      @Body() credentials: LoginCredentialsDto
+    ) {
+      return this.userService.login(credentials);
+    }
+  /*
+    @Get('all')
+    findAll(): Promise<UserEntity[]> {
+      return this.userService.findAll();
+    }*/
 }
