@@ -3,6 +3,7 @@ import { CvEntity } from '../../cv/entities/cv.entity';
 //import { UserRoleEnum } from '../../enums/user-role.enum';
 import { Exclude } from 'class-transformer';
 import { TimestampEntites } from 'src/Generics/timestamp.entities';
+import { UserRoleEnum } from 'src/enums/user-role.enum';
 
 @Entity('user')
 export class UserEntity extends TimestampEntites{
@@ -21,7 +22,7 @@ export class UserEntity extends TimestampEntites{
   })
   email: string;
 
-/*
+
   @Column()
   @Exclude()
   password: string;
@@ -36,7 +37,7 @@ export class UserEntity extends TimestampEntites{
     default: UserRoleEnum.USER
   })
   role: string;
-*/
+
   @OneToMany(
     type => CvEntity,
     (cv) => cv.user,
