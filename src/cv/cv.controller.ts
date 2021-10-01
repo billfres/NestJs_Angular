@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Request, request } from 'express';
 import { JwtAuthGuard } from 'src/user/Guards/jwt-auth.guard';
 import { CvService } from './cv.service';
 import { AddCvDto } from './dto/Add-cv.dto';
@@ -20,9 +21,12 @@ export class CvController {
     @Post()
     @UseGuards(JwtAuthGuard)
     async addCv(
-        @Body() addCvDto: AddCvDto
+        @Body() addCvDto: AddCvDto,
+        @Req() request: Request
     ): Promise<CvEntity>{
-        return await this.cvService.addCv(addCvDto);
+        //console.log('User extracted from request',request.user)
+        const user = request.user;
+        return await this.cvService.addCv(addCvDto, user);
     }
 
     @Patch()
