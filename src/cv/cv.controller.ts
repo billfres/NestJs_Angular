@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/user/Guards/jwt-auth.guard';
 import { CvService } from './cv.service';
 import { AddCvDto } from './dto/Add-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
@@ -17,6 +18,7 @@ export class CvController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     async addCv(
         @Body() addCvDto: AddCvDto
     ): Promise<CvEntity>{
@@ -24,7 +26,7 @@ export class CvController {
     }
 
     @Patch()
-    //@UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async updateCv2(
         @Body() updateObject
         //@User() user
@@ -70,6 +72,7 @@ export class CvController {
         return this.cvService.softRemoveCv(id);
     }*/
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     async deleteCv(
         @Param('id', ParseIntPipe) id: number
     ) {
@@ -77,6 +80,7 @@ export class CvController {
     }
 
     @Patch(':id')
+    @UseGuards(JwtAuthGuard)
     async updateCv(
         @Body() updateCvDto: UpdateCvDto,
         @Param('id', ParseIntPipe) id : number
