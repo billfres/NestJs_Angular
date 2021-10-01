@@ -5,13 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { LoginCredentialsDto } from './dto/login-credentials.dto';
+import { JwtService } from '@nestjs/jwt';
 
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(UserEntity)
-        private userRepository: Repository<UserEntity>
+        private userRepository: Repository<UserEntity>,
+        private jwtService : JwtService
     ){}
 
     async register(userData : UserSubscribeDto): Promise<Partial<UserEntity>>{
@@ -54,16 +56,15 @@ export class UserService {
    // Si oui je vérifie est ce que le mot est correct ou pas
     const hashedPassword = await bcrypt.hash(password, user.salt);
     if (hashedPassword === user.password) {
-       // const payload
-        return   {
+        const payload = {
         username: user.username,
         email: user.email,
         role: user.role
     };
-    //const jwt = await this.jwtService.sign(payload);
-     /*return {
+    const jwt = await this.jwtService.sign(payload);
+     return {
        "access_token" : jwt
-     };*/
+     };
     } else {
      // Si mot de passe incorrect je déclenche une erreur
      throw new NotFoundException('username ou password erronée');
