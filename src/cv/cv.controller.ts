@@ -1,10 +1,12 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { Request, request } from 'express';
+//import { UserEntity } from 'src/user/entities/user.entity';
 import { JwtAuthGuard } from 'src/user/Guards/jwt-auth.guard';
 import { CvService } from './cv.service';
 import { AddCvDto } from './dto/Add-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
 import { CvEntity } from './entities/cv.entity';
+import { User } from '../decorators/user.decorator';
 
 @Controller('cv')
 export class CvController {
@@ -14,8 +16,11 @@ export class CvController {
     }
 
     @Get()
-    async getAllCvs(): Promise<CvEntity[]>{
-        return await this.cvService.getCvs();
+    @UseGuards(JwtAuthGuard)
+    async getAllCvs(
+        @User() user
+    ): Promise<CvEntity[]>{
+        return await this.cvService.getCvs(user);
     }
 
     @Post()

@@ -22,8 +22,8 @@ export class CvService {
           return cv;
       }
 
-    async getCvs(): Promise<CvEntity[]>{
-        return await this.cvRespository.find();
+    async getCvs(user): Promise<CvEntity[]>{
+        return await this.cvRespository.find({user});
     }
 
     async addCv(cv: AddCvDto, user): Promise<CvEntity>{
