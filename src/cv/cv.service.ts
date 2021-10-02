@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserRoleEnum } from 'src/enums/user-role.enum';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { AddCvDto } from './dto/Add-cv.dto';
@@ -14,15 +15,21 @@ export class CvService {
     ){
     }
 
-    async findCvById(id: number) {
+    async findCvById(id: number, user) {
         const cv = await this.cvRespository.findOne(id);
         if(! cv) {
           throw new NotFoundException(`Le cv d'id ${id} n'existe pas`);
         }
-          return cv;
-      }
+        // Si on est admin ou si on est admin et on a pas de user
+        if(user.role === UserRoleEnum.ADMIN || (cv.user && cv.user.id === user.id))
+            return cv;
+        else 
+            throw new UnauthorizedException;     
+    }
 
     async getCvs(user): Promise<CvEntity[]>{
+        if(user.role === UserRoleEnum.ADMIN)
+        return await this.cvRespository.find();
         return await this.cvRespository.find({user});
     }
 
@@ -32,28 +39,33 @@ export class CvService {
         return await this.cvRespository.save(newCv);
     }
 
-    async updateCv(id:number, cv: UpdateCvDto): Promise<CvEntity>{
+    async updateCv(id:number, cv: UpdateCvDto, user): Promise<CvEntity>{
          //On récupére le cv d'id id et ensuite on remplace les anciennes valeurs de ce cv
          // par ceux du cv passé en paramètre
         const newCv = await this.cvRespository.preload({
             id,
             ...cv
         })
-          // tester le cas ou le cv d'id id n'existe pas
+          // tester le cas ou le cv d'id id n'existe pas et sauvegarde de la nouvelle entité new cv
         if(! newCv) {
             throw new NotFoundException(`Le cv d'id ${id} n'existe pas`);
         }
-        return await this.cvRespository.save(newCv);
+        // Si on est admin ou si on est admin et on a pas de user
+        if(user.role === UserRoleEnum.ADMIN || (newCv.user && newCv.user.id === user.id))
+            return await this.cvRespository.save(newCv);
+        else
+        new UnauthorizedException('');
     }
 
     updateCv2(updateCriteria, cv: UpdateCvDto ) {
         return this.cvRespository.update(updateCriteria, cv);
     }
 
+/*
     async removeCv(id: number) {
         const cvToRemove = await this.findCvById(id);
         return await this.cvRespository.remove(cvToRemove);
-    }
+    }*/
 
     async deleteCv(id: number) {
        /* const cvToRemove = await this.cvRespository.findOne(id);

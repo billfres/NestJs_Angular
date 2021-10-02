@@ -27,18 +27,17 @@ export class CvController {
     @UseGuards(JwtAuthGuard)
     async addCv(
         @Body() addCvDto: AddCvDto,
-        @Req() request: Request
+        @User() user
     ): Promise<CvEntity>{
         //console.log('User extracted from request',request.user)
-        const user = request.user;
         return await this.cvService.addCv(addCvDto, user);
     }
 
     @Patch()
     @UseGuards(JwtAuthGuard)
     async updateCv2(
-        @Body() updateObject
-        //@User() user
+        @Body() updateObject,
+        @User() user
     ) {
         const {updateCriteria, updateCvDto} = updateObject
         return await this.cvService.updateCv2(updateCriteria, updateCvDto);
@@ -61,9 +60,10 @@ export class CvController {
 
     @Get(":id")
     async getCv(
-        @Param('id', ParseIntPipe) id
+        @Param('id', ParseIntPipe) id,
+        @User() user
     ): Promise<CvEntity>{
-        return await this.cvService.findCvById(id);
+        return await this.cvService.findCvById(id, user);
     }
 
     /*@Delete(':id')
@@ -92,9 +92,10 @@ export class CvController {
     @UseGuards(JwtAuthGuard)
     async updateCv(
         @Body() updateCvDto: UpdateCvDto,
-        @Param('id', ParseIntPipe) id : number
+        @Param('id', ParseIntPipe) id : number,
+        @User() user
     ): Promise<CvEntity>{
-        return await this.cvService.updateCv(id,updateCvDto);
+        return await this.cvService.updateCv(id,updateCvDto, user);
     }
 }
 
