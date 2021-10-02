@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRoleEnum } from 'src/enums/user-role.enum';
 import { UserEntity } from 'src/user/entities/user.entity';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { AddCvDto } from './dto/Add-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
@@ -11,7 +12,8 @@ import { CvEntity } from './entities/cv.entity';
 export class CvService {
     constructor(
         @InjectRepository(CvEntity)
-        private cvRespository: Repository<CvEntity>
+        private cvRespository: Repository<CvEntity>,
+        private userService : UserService
     ){
     }
 
@@ -21,7 +23,7 @@ export class CvService {
           throw new NotFoundException(`Le cv d'id ${id} n'existe pas`);
         }
         // Si on est admin ou si on est admin et on a pas de user
-        if(user.role === UserRoleEnum.ADMIN || (cv.user && cv.user.id === user.id))
+        if(this.userService.isOwnerOrAdmin(cv, user))
             return cv;
         else 
             throw new UnauthorizedException;     
@@ -51,7 +53,7 @@ export class CvService {
             throw new NotFoundException(`Le cv d'id ${id} n'existe pas`);
         }
         // Si on est admin ou si on est admin et on a pas de user
-        if(user.role === UserRoleEnum.ADMIN || (newCv.user && newCv.user.id === user.id))
+        if(this.userService.isOwnerOrAdmin(newCv, user))
             return await this.cvRespository.save(newCv);
         else
         new UnauthorizedException('');
@@ -79,12 +81,26 @@ export class CvService {
         const cvToRemove = await this.findCvById(id);
         return this.cvRespository.softRemove(cvToRemove);
     }*/
-    async softDeleteCv(id: number){
-        return this.cvRespository.softDelete(id);
+    async softDeleteCv(id: number, user){
+        const cv = await this.cvRespository.findOne({id});
+        if(!cv){
+            throw new NotFoundException('');
+        } 
+        if(this.userService.isOwnerOrAdmin(cv, user))
+            return this.cvRespository.softDelete(id);
+        else
+            throw new UnauthorizedException('');
     }
 
-    async restoreCv(id: number){
-        this.cvRespository.restore(id);
+    async restoreCv(id: number, user){
+        const cv = await this.cvRespository.query("select * from cv where id = ?", [id]);
+        if(!cv){
+            throw new NotFoundException('');
+        } 
+        if(this.userService.isOwnerOrAdmin(cv, user))
+            return this.cvRespository.restore(id);
+        else
+            throw new UnauthorizedException('');
     }
 
     async statCvNumberByAge(maxAge, minAge = 0) {

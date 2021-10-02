@@ -53,9 +53,12 @@ export class CvController {
     //Les routes les plus génériques(avec paramètres) sont toujours placées à la fin
 
     @Get('recover/:id')
+    @UseGuards(JwtAuthGuard)
     async restoreCv(
-        @Param('id', ParseIntPipe) id:  number){
-        return await this.cvService.restoreCv(id);
+        @Param('id', ParseIntPipe) id:  number,
+        @User() user
+    ){
+        return await this.cvService.restoreCv(id, user);
     }
 
     @Get(":id")
@@ -83,9 +86,10 @@ export class CvController {
     @Delete(':id')
     @UseGuards(JwtAuthGuard)
     async deleteCv(
-        @Param('id', ParseIntPipe) id: number
+        @Param('id', ParseIntPipe) id: number,
+        @User() user
     ) {
-        return this.cvService.softDeleteCv(id);
+        return this.cvService.softDeleteCv(id, user);
     }
 
     @Patch(':id')
